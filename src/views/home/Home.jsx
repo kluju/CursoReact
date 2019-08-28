@@ -38,10 +38,42 @@ class Home extends Component {
         this.setState({ [name]: value });
     }
 
+    
     /**
      * Metodo manejador de evento click para boton que agrega tareas al array lista
      * @returns {undefined}
      */
+    
+    changeState = (element,type) => {
+        const { lista } = this.state;
+        const listaAux = [];
+        
+        if(type == "anillo"){
+        lista.map((elementL)=>{
+                if(element === elementL ){
+                    element.anillo = true;
+                }
+                elementL.anillo2 = true;
+        });
+        }else{
+            var i = lista.indexOf( element );
+            if ( i !== -1 ) {
+                lista.splice( i, 1 );
+            }
+            lista.push(element);
+            lista.map((elementL)=>{
+                if(element === elementL ){
+                    element.kill = true;
+                }
+        });
+        }
+        
+        //lista = listaAux;
+        this.setState({
+            lista,
+            tarea: ''
+        });
+    }
     handleAddTask = () => {
         const { tarea, lista } = this.state;
         lista.push(tarea);
@@ -51,7 +83,11 @@ class Home extends Component {
             tarea: ''
         });
     }
-
+    addClass  = (element) => {
+        const anillo = element.anillo === true ? "character-row anillo":"character-row";
+        const kill = element.kill === true ? "kill":"";
+        return `${anillo} ${kill}`;
+    }
     render() {
         const { parametroEjemplo } = this.props;
         const { search_input, lista } = this.state;
@@ -71,23 +107,32 @@ class Home extends Component {
                                 <Th>Race</Th>
                                 <Th>Age</Th>
                                 <Th>Weapon</Th>
-                                <Th>
-                                    
-                                </Th> 
+                                <Th></Th> 
                                 
                             </Tr>
                         </Thead>
                         <Tbody>
                         {lista.map((element)=>(
-                            <Tr className="character-row" key = {element.id}>
+                           
+                            <Tr className={this.addClass(element) } key = {element.id}>
                                 <Td>{element.name}</Td>
                                 <Td>{element.race}</Td>
                                 <Td>{element.age}</Td>
                                 <Td>{element.weapon}</Td>
                                 <Td>
                                     <Content className="controls">
-                                        <Content>â˜  Kill</Content>
-                                        <Content>ðŸ’ Use Ring</Content>
+                                        <Content><a onClick={() => {
+                                            this.changeState(element,"kill");
+                                        }}>
+                                        â˜  Kill
+                                        </a></Content>
+                                        <Content  ><a className={element.anillo2 === true ? "anillo2":"" } onClick={() => {
+                                            this.changeState(element,"anillo");
+                                            //this.setState({ name: "James"});
+                                        }}>
+                                        ðŸ’ Use Ring
+                                        </a></Content>
+
                                     </Content>
                                 </Td>
                             </Tr>

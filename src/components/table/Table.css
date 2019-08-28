@@ -9,3 +9,10 @@ table {
 .character-row td {
     border-bottom: 1px solid white;
 }
+
+.anillo, .anillo2{
+    display: none;
+}
+.kill{
+    color: gray;
+}

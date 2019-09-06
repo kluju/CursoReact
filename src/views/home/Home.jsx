@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect }  from 'react';
 import Table from '../../components/table/Table';
 import Thead from '../../components/table/Thead';
 import Tr from '../../components/table/Tr';
@@ -7,35 +7,19 @@ import Td from '../../components/table/Td';
 import Tbody from '../../components/table/Tbody';
 import { getAll } from '../../service/hero.service';
 import './Home.css';
+import { MyContext } from '../../contex/MyContext'
 import Content from '../../components/Content';
 import H2 from '../../components/H2';
+import InputLabel from '../../components/inputlabel/InputLabel';
 
-/**
- * Componente basado en clase, utilizado como vista en una aplicacion
- * 
- * @version 1.0.0
- * @author Claudio Rojas <claudio.dcv(a)gmail.com>
- */
-class Home extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            search_input: '',
-            password: '*****',
-            tarea: '',
-            lista: getAll(),
-        };
-    }
+const Home = ({props}) => {
 
-    /**
-     * Metodo generico manejador de evento cambio para inputs
-     * @param {HTMLElement} event - evento default al realizar un cambio de estado en un elemento input
-     * @returns {undefined}
-     */
-    handleOnChange = (event) => {
+    const handleOnChange = (event) => {
+        
         const { name, value } = event.target;
-        this.setState({ [name]: value });
+        debugger;
+        //this.setState({ [name]: value });
     }
 
     
@@ -44,7 +28,7 @@ class Home extends Component {
      * @returns {undefined}
      */
     
-    changeState = (element,type) => {
+    const changeState = (element,type) => {
         const { lista } = this.state;
         const listaAux = [];
         
@@ -65,7 +49,7 @@ class Home extends Component {
                 if(element === elementL ){
                     element.kill = true;
                 }
-        });
+            });
         }
         
         //lista = listaAux;
@@ -74,7 +58,7 @@ class Home extends Component {
             tarea: ''
         });
     }
-    handleAddTask = () => {
+    const handleAddTask = () => {
         const { tarea, lista } = this.state;
         lista.push(tarea);
         
@@ -83,66 +67,114 @@ class Home extends Component {
             tarea: ''
         });
     }
-    addClass  = (element) => {
+    const addClass  = (element) => {
         const anillo = element.anillo === true ? "character-row anillo":"character-row";
         const kill = element.kill === true ? "kill":"";
         return `${anillo} ${kill}`;
     }
-    render() {
+    
+
+        const value = {
+            handleOnChange: handleOnChange
+          }
+
         const { parametroEjemplo } = this.props;
         const { search_input, lista } = this.state;
-        
-        return (
-            <Content className = "index">
-                <H2>Fellowship of the Ring</H2>
-                <Content className="container">
-                    <Content >
-                        <input value={search_input} onChange={this.handleOnChange} name="search_input" />
-                    </Content>
-                    <Table class_name="characters-table">
+  
+    return (
+        <main className = "flex-shrink-0">
+                
+        <Content className="container">
+            <h1 className = "mt-5">Fellowship of the Ring</h1>
+            <Content >
+                <input value={search_input} onChange={this.handleOnChange} name="search_input" />
+            </Content>
+
+            <Content className="row">
+                <Content className="col">
+                    <Table className="table table-bordered">
                         <Thead>
                             <Tr className="character-row">
                                 
-                                <Th>Name</Th>
-                                <Th>Race</Th>
-                                <Th>Age</Th>
-                                <Th>Weapon</Th>
-                                <Th></Th> 
+                                <Th scope="col">Name</Th>
+                                <Th scope="col">Race</Th>
+                                <Th scope="col">Age</Th>
+                                <Th scope="col">Weapon</Th>
+                                <Th scope="col" colspan = "2"></Th> 
                                 
                             </Tr>
                         </Thead>
                         <Tbody>
                         {lista.map((element)=>(
-                           
+                        
                             <Tr className={this.addClass(element) } key = {element.id}>
                                 <Td>{element.name}</Td>
                                 <Td>{element.race}</Td>
                                 <Td>{element.age}</Td>
                                 <Td>{element.weapon}</Td>
                                 <Td>
-                                    <Content className="controls">
-                                        <Content><a onClick={() => {
+                                    <a onClick={() => {
                                             this.changeState(element,"kill");
                                         }}>
                                         â˜  Kill
-                                        </a></Content>
-                                        <Content  ><a className={element.anillo2 === true ? "anillo2":"" } onClick={() => {
+                                    </a>
+                                </Td>
+                                <Td>
+                                    <a className={element.anillo2 === true ? "anillo2":"" } onClick={() => {
                                             this.changeState(element,"anillo");
                                             //this.setState({ name: "James"});
                                         }}>
                                         ðŸ’ Use Ring
-                                        </a></Content>
-
-                                    </Content>
+                                    </a>
                                 </Td>
                             </Tr>
                         ))}
                         </Tbody>
                     </Table>
+
+
+
+                </Content>
+                <Content className="col">
+                    <MyContext.Provider value={value}>
+                    <form>
+                        <Content class="form-group">
+                            <InputLabel type="text" className="form-control" name="name" aria-describedby="emailHelp" placeholder="Name" label= "Name"></InputLabel>
+                        </Content>
+                        <Content class="form-group">
+                            <InputLabel type="text" className="form-control" name="race" aria-describedby="emailHelp" placeholder="Name" label= "Race"></InputLabel>
+                        </Content>
+                        <Content class="form-group form-check">
+                            <InputLabel type="text" className="form-control" name="age" aria-describedby="emailHelp" placeholder="Name" label= "Age"></InputLabel>
+                        </Content>
+                        <Content class="form-group form-check">
+                            <InputLabel type="text" className="form-control" name="weapon" aria-describedby="emailHelp" placeholder="Name" label= "Weapon"></InputLabel>
+                        </Content>
+                        <button type="button" class="btn btn-primary">Guardar</button>
+                    </form>
+                    </MyContext.Provider>
                 </Content>
             </Content>
-        );
-    }
-}
 
-export default Home;
+
+
+            
+        </Content>
+    </main>
+    )
+  }
+  
+  export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
+

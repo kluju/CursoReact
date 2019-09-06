@@ -7,7 +7,7 @@ const InputLabel = (props) => {
         <MyContext.Consumer>
             {(context) => (
                 <>
-                    <label>{props.label}</label>
+                <label>{props.label}</label>
                 <input type={props.type} name = {props.name} className={props.className} value={props.value}  placeholder={props.placeholder} onChange={context.handleOnChange}/>
                 </>
             )}

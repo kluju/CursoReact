@@ -1,14 +1,4 @@
-.character-row td {
-    border-bottom: 1px solid white;
-}
-  
-table {
-    border-collapse: collapse;
-    
-}
-.character-row td {
-    border-bottom: 1px solid white;
-}
+
 
 .anillo, .anillo2{
     display: none;
